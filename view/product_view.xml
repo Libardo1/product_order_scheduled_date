@@ -10,6 +10,7 @@
                     <field name="default_code"/>
                     <field name="virtual_available"/>
                     <field name="next_expected_delivery_date"/>
+                    <field name="supplier_to_reorder"/>
                     <!--<button name="reorder_product" type="object" icon="terp-gtk-jump-to-ltr"  />-->
                 </tree>
             </field>

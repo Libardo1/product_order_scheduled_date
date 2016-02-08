@@ -8,6 +8,7 @@ class product_wth_order_scheduled_date(models.Model):
     _inherit = ['product.product']
 
     next_expected_delivery_date = fields.Date(string="Next expected delivery date", compute="_compute_next_expected_delivery_date")
+    supplier_to_reorder = fields.Char(string="Supplier", compute="_compute_supplier_name")
 
     @api.one
     @api.depends('virtual_available')
@@ -23,6 +24,11 @@ class product_wth_order_scheduled_date(models.Model):
             if move != None:
                 self.next_expected_delivery_date = move.date_expected
 
+    @api.one
+    def _compute_supplier_name(self):
+        if len(self.seller_ids) > 1:
+            self.supplier_to_reorder = self.seller_ids[0].name.name
+                
     @api.multi
     def reorder_product(self):
         qty_to_reorder = - self.virtual_available
