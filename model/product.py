@@ -15,14 +15,31 @@ class product_wth_order_scheduled_date(models.Model):
     def _compute_next_expected_delivery_date(self):
         if self.virtual_available < 0:
             # get the expected date on the oldest non complete stock.move for this product and set it to this product
+            date_requested = 0
+
             moves_obj = self.pool.get('stock.move')
             moves = moves_obj.search(self.env.cr, self.env.uid, [['product_id', '=', self.id], ['state', 'not in', ('draft', 'cancel', 'done')], ['picking_id', 'like', 'OUT']], order="date_expected asc")
-            move = None
-            if len(moves) > 0:
-                moves = moves_obj.browse(self.env.cr, self.env.uid, moves)
-                move = moves[0]
-            if move != None:
-                self.next_expected_delivery_date = move.date_expected
+
+            for move in moves_obj.browse(self.env.cr, self.env.uid, moves):
+                # get the sales order and get the requested date if set
+                sale_order_number = move.origin
+                sale_orders_obj = self.pool.get('sale.order')
+                sale_orders = sale_orders_obj.search(self.env.cr, self.env.uid, [['name', '=', sale_order_number]])
+
+                if len(sale_orders) == 1:
+                    sale_orders = sale_orders_obj.browse(self.env.cr, self.env.uid, sale_orders)
+                    sale_order = sale_orders[0]
+                    if sale_order.requested_date != "":
+                        # test if requested date is set
+                        if date_requested == 0:
+                            date_requested = sale_order.requested_date
+                        # if sooner, take this date
+                        else:
+                            if sale_order.requested_date < date_requested:
+                                date_requested = sale_order.requested_date
+
+                # set the date
+                self.next_expected_delivery_date = date_requested
 
     @api.one
     def _compute_supplier_name(self):
