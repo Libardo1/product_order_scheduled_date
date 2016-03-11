@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 class product_wth_order_scheduled_date(models.Model):
     _inherit = ['product.product']
 
-    next_expected_delivery_date = fields.Date(string="Next expected delivery date", compute="_compute_next_expected_delivery_date")
+    next_expected_delivery_date = fields.Date(string="Next requested delivery date", compute="_compute_next_expected_delivery_date")
     supplier_to_reorder = fields.Char(string="Supplier", compute="_compute_supplier_name")
 
     @api.one
