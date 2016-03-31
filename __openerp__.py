@@ -1,7 +1,7 @@
 {
     'name': "Product Re-Order Scheduled Date",
     'version': '1.0',
-    'depends': ['sale', 'stock'],
+    'depends': ['sale', 'stock', 'sale_order_dates'],
     'author': "Valentin THIRION, AbAKUS it-solutions SARL",
     'website': "http://www.abakusitsolutions.eu",
     'category': 'Sale',
