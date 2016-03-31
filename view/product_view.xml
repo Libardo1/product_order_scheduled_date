@@ -21,9 +21,12 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
-                <field name="virtual_available" position="after">
-                    <field name="next_expected_delivery_date" attrs="{'invisible':[('next_expected_delivery_date','=','None')]}"/>
-                </field>
+                <group name="stock_property" position="after">
+                    <group name="stock_qantities" string="Quantities">
+                        <field name="virtual_available" />
+                        <field name="next_expected_delivery_date" attrs="{'invisible':[('next_expected_delivery_date','=','None')]}"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -37,6 +40,6 @@
         </record>
 
         <menuitem id="action_manage_shipping" name="Products to re-order"
-            parent="purchase.menu_procurement_management_product" action="purchase_products_to_reorder"/>
+            parent="purchase.menu_procurement_management" action="purchase_products_to_reorder" sequence="50"/>
     </data>
 </openerp>
